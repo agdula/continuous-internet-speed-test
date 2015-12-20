@@ -42,7 +42,7 @@ public class ContinuousInternetSpeedTest {
 		long averageBytesPerSecond = 0;
 
 		while (true) {
-			if (measurementCounter > 0 || Configuration.getBoolean(Key.DELAY_FIRST_MEASUREMENT)) {
+			if (measurementCounter++ > 0 || Configuration.getBoolean(Key.DELAY_FIRST_MEASUREMENT)) {
 				logger.info("Next speed-test in {}", Util.humanReadableDuration(Configuration.getInt(Key.MEASUREMENT_DELAY)));
 
 				try {
@@ -67,7 +67,7 @@ public class ContinuousInternetSpeedTest {
 
 			logger.info(result.toString());
 
-			if (maxMeasurments > 0 && ++measurementCounter >= maxMeasurments) {
+			if (maxMeasurments > 0 && measurementCounter >= maxMeasurments) {
 				break;
 			}
 		}
