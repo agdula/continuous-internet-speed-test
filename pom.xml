@@ -6,6 +6,12 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Continuous Internet Speed Test</name>
 
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.3.1.RELEASE</version>
+	</parent>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.slf4j</groupId>
