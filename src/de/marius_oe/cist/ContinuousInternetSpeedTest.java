@@ -39,10 +39,11 @@ public class ContinuousInternetSpeedTest {
 		logger.info("> Max measurement duration: {} ms", (maxDuration == 0) ? "unlimited" : maxDuration);
 		logger.info("> Max measurement volume: {}", (maxVolume == 0) ? "unlimited" : Util.humanReadableByteCount(maxVolume));
 
-		long averageBytesPerSecond = 0;
+		Result total = new Result();
 
 		while (true) {
-			if (measurementCounter++ > 0 || Configuration.getBoolean(Key.DELAY_FIRST_MEASUREMENT)) {
+			boolean nextMeasure = measurementCounter++ > 0;
+			if (nextMeasure || Configuration.getBoolean(Key.DELAY_FIRST_MEASUREMENT)) {
 				logger.info("Next speed-test in {}", Util.humanReadableDuration(Configuration.getInt(Key.MEASUREMENT_DELAY)));
 
 				try {
@@ -63,7 +64,14 @@ public class ContinuousInternetSpeedTest {
 
 			resultWriter.storeResult(result);
 
-			averageBytesPerSecond += result.getBytesTransfered() / ((result.getEndTime() - result.getStartTime()) / 1000);
+			if(nextMeasure) {
+				total.setBytesTransfered(result.getBytesTransfered());
+				total.setStartTime(result.getStartTime());
+				total.setEndTime(result.getEndTime());
+			} else {
+				total.setBytesTransfered(total.getBytesTransfered() + result.getBytesTransfered());
+				total.setEndTime(total.getEndTime() + result.getEndTime() - result.getStartTime());
+			}
 
 			logger.info(result.toString());
 
@@ -75,7 +83,7 @@ public class ContinuousInternetSpeedTest {
 		resultWriter.done();
 
 		logger.info("Continious-Internet-Speed-Test has sucessfully ended");
-		logger.info("Average speed of {} measurements: {}/sec", measurementCounter, Util.humanReadableByteCount(averageBytesPerSecond / measurementCounter));
+		logger.info("Average speed of {} measurements: {}/sec", measurementCounter, Util.humanReadableByteCount((long)total.getBytesPerSecond()));
 	}
 
 	private static URL newTestFile() {

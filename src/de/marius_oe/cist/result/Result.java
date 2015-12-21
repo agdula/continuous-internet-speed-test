@@ -67,9 +67,17 @@ public class Result {
 
 	@Override
 	public String toString() {
-		long durationSeconds = (endTime - startTime) / 1000;
-		long bytesPerSecond = bytesTransfered / durationSeconds;
-		return String.format("Transfered %s in %d seconds. Average speed: %s/sec", Util.humanReadableByteCount(bytesTransfered), durationSeconds,
-				Util.humanReadableByteCount(bytesPerSecond));
+		double durationSeconds = getDurationSeconds();
+		double bytesPerSecond = getBytesPerSecond();
+		return String.format("Transfered %s in %f seconds. Average speed: %s/sec", Util.humanReadableByteCount(bytesTransfered), durationSeconds,
+				Util.humanReadableByteCount((long)bytesPerSecond));
+	}
+
+	public double getDurationSeconds() {
+		return ((double)(endTime - startTime)) / 1000;
+	}
+
+	public double getBytesPerSecond() {
+		return ((double)bytesTransfered) / getDurationSeconds();
 	}
 }

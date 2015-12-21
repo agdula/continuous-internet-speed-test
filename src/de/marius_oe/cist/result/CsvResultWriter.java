@@ -90,7 +90,7 @@ public class CsvResultWriter implements ResultWriter {
 		long startTime = result.getStartTime();
 		long duration = result.getEndTime() - startTime;
 		long bytesTransfered = result.getBytesTransfered();
-		long bytesPerSecond = (duration > 0) ? ((bytesTransfered / 1000) / (duration / 1000)) : (-1);
+		double bytesPerSecond = result.getBytesPerSecond();
 
 		writeLine(new Object[] { startTime, duration, bytesTransfered, bytesPerSecond });
 	}
